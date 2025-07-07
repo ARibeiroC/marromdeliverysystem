@@ -8,8 +8,9 @@ import { RouterProvider, createBrowserRouter, Navigate} from 'react-router-dom'
 import { ErrorPage } from './routes/Error/index.jsx'
 import { Delivery } from './routes/Delivery/Delivery.jsx'
 import {RegisterExit} from './routes/RegisterExit/RegisterExit.jsx'
-import { AdminLogin } from './routes/Admin/AdminLogin.jsx'
+import { AdminLogin } from './routes/AdminLogin/AdminLogin.jsx'
 import { Welcome } from './routes/Welcome/Welcome.jsx'
+import { AdminPanel } from './routes/AdminPanel/AdminPanel.jsx'
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
           {
             path: '/delivery/admin',
             element: <AdminLogin />
+          },
+          {
+            path: '/delivery/admin-dashboard',
+            element: <AdminPanel />
           }
         ]
       },

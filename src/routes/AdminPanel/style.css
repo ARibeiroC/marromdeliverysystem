@@ -1,0 +1,45 @@
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1rem;
+
+    padding-inline: .4rem;
+
+    .dashboard-summary {
+        display: flex;
+        gap: .6rem;
+        
+        .summary-card {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            border: 1px solid var(--golden-color);
+            background-color: var(--input-background-color);
+
+            text-align: center;
+        }
+    }
+
+    .filter-section {
+        border: 1px solid var(--golden-color);
+        background-color: var(--input-background-color);
+        padding: .4rem;
+
+        /* text-align: center; */
+        .filters {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            label {
+                display: flex;
+                flex-direction: column;
+
+                .input {
+                    padding: 0;
+                }
+            }
+        }
+    }
+}

@@ -14,7 +14,7 @@ export function RegisterExit(){
             <form>
                 <h1>REGISTRAR SAÍDA</h1>
                 <Input type='text' placeholder={'Nome completo do motorista'} minLenght={20} maxLenght={80} required={true} />
-                <Input type='text' placeholder={'Placa do Veículo'} />
+                <Input type='text' placeholder={'Placa do Veículo'} maxLenght={9}/>
                 <Button text='Registrar' required={true} />
             </form>
         </div>
