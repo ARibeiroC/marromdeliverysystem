@@ -1,0 +1,23 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+
+    padding: .4rem 0;
+    width: 100%;
+    ul {
+        display: flex;
+        justify-content: end;
+        flex: 1;
+        gap: .4rem;        
+
+        li {
+            display: flex;
+            padding: .6rem;
+
+            border: 1px solid var(--border-color);
+            border-radius: .4rem;
+            
+            background-color: var(--button-background-color);
+        }
+    }
+}

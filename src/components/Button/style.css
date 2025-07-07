@@ -1,0 +1,23 @@
+.button {
+    padding: 1rem;
+    .golden-button {
+        background-color: var(--golden-color);
+        color: var(--text-color-light);
+        padding: .6rem;
+        border: transparent;
+        border-radius: .4rem; 
+        cursor: pointer;
+        font-size: 1.2em;
+        font-weight: bold;
+        width: 100%;
+        transition: background-color 0.3s ease;
+
+        &:hover{
+            background-color: #a36b30;
+        }
+
+        &:active {
+            box-shadow: 2px 2px 16px inset rgba(0,0,0,.9);
+        }
+    }
+}

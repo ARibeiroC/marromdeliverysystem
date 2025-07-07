@@ -1,0 +1,26 @@
+.welcome {
+        display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    
+    height: calc(100vh - calc(var(--header-height) + var(--footer-height)) );
+    padding-inline: .4rem;
+
+    .logo{
+        flex: 0;
+        .logo-container {
+            img {
+                max-width: 100%;
+            }
+        }
+    }
+
+    ul{
+        padding: .4rem 1rem;
+        li {
+            list-style: disc;
+        }
+    }
+}

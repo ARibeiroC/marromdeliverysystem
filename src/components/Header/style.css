@@ -1,0 +1,8 @@
+header {
+    display: flex;
+    
+    height: var(--header-height);
+    width: 100%;
+    border-bottom: 1px solid var(--dark-text-color);
+    padding-inline: .4rem;
+}

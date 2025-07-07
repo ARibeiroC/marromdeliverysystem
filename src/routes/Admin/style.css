@@ -1,0 +1,9 @@
+.admin-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+
+    padding-inline: .4rem;
+    height: calc(100vh - var(--content-height));
+}

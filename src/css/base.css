@@ -1,0 +1,83 @@
+:root{
+    --primary-bg: #000;
+    --secondary-background-color: #1a1a1a;
+
+    --dark-background-color: #0d0d0d;
+    --darker-background-color: #070707;
+
+    --text-color-light: #fff;
+    --text-color: #e0e0e0; 
+    --dark-text-color: #333;
+
+    --golden-color: #B47C3D; 
+    --golden-accent: #B47C3D; 
+    --golden-hover: #a36b30; 
+    --golden-accent-rgb: 180, 124, 61;
+
+    --input-bg: #fff; 
+    --input-background-color: #2a2a2a; 
+    --input-border: #333; 
+    --border-color: #444;
+
+    --error-color: #dc3545;
+    --sucess-color: #28a745;
+
+    --button-background-color: #4a4a4a;
+    --button-hover-color: #6a6a6a;
+
+    --header-height: 3rem;
+    --footer-height: 2rem;
+    --content-height: calc(var(--header-height) + var(--footer-height));
+}
+
+* {
+    font-family: Helvetica;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    display: flex;
+
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color-light);
+    background-color: rgba(0,0,0,.9);
+    background-image: url('/static/img/bg2.png');
+    background-position: center center;
+    background-size: cover;
+    background-blend-mode: darken;
+
+    h1, h2, h3 {
+        color: var(--golden-color); /* Títulos em dourado */
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    h1 { font-size: 2.5em; } 
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.4em; }
+
+    p {
+        margin-bottom: 1rem;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        color: var(--golden-color); /* Links em dourado */
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
