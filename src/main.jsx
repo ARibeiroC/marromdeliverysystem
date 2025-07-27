@@ -12,6 +12,9 @@ import { AdminLogin } from './routes/AdminLogin/AdminLogin.jsx'
 import { Welcome } from './routes/Welcome/Welcome.jsx'
 import { AdminPanel } from './routes/AdminPanel/AdminPanel.jsx'
 
+// IMPORT AUTH CONTEXT
+import { AuthProvider } from './context/AuthContext.jsx'; // CORRIGIDO: Importar AuthProvider
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -54,6 +57,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )

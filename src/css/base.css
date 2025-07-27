@@ -19,9 +19,11 @@
     --input-border: #333; 
     --border-color: #444;
 
-    --error-color: #dc3545;
     --sucess-color: #28a745;
-
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    
     --button-background-color: #4a4a4a;
     --button-hover-color: #6a6a6a;
 
@@ -59,9 +61,7 @@ body {
     h2 { font-size: 1.8em; }
     h3 { font-size: 1.4em; }
 
-    p {
-        margin-bottom: 1rem;
-    }
+
 
     li {
         list-style: none;

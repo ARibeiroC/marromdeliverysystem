@@ -19,6 +19,8 @@
             background-color: var(--input-background-color);
 
             text-align: center;
+
+            padding-block: .4rem;
         }
     }
 
@@ -39,6 +41,139 @@
                 .input {
                     padding: 0;
                 }
+            }
+        }
+    }
+
+    #feedback-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        position: fixed;
+        padding: 1rem;
+        border-radius: .4rem;
+        top: 3rem;
+        width: 97%;
+        z-index: 2;
+        
+        /* Animação de entrada padrão */
+        /* animation: slideInFromRight 0.5s ease-out forwards; */
+        opacity: 0; /* Inicia invisível */
+        /* transform: translateX(10%); */
+
+        &.exiting {
+            animation: slideOutToRight 0.5s ease-in forwards;
+        }
+        
+        & p {
+            margin: 0;
+            color: var(--text-color-light);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Cores dinâmicas para a mensagem de feedback */
+        &.success {
+            background-color: var(--sucess-color); /* Sua cor de sucesso existente */
+        }
+        &.error {
+            background-color: var(--error-color, #dc3545); /* Cor para erro, com fallback */
+        }
+        &.info {
+            background-color: var(--info-color, #17a2b8); /* Cor para informação, com fallback */
+        }
+    }
+
+    /* Keyframes para a animação de entrada */
+    /* @keyframes slideInFromRight {
+        0% {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0%);
+        }
+    } */
+
+    /* Keyframes para a animação de saída */
+    /* @keyframes slideOutToRight {
+        0% {
+            opacity: 1;
+            transform: translateX(0%);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+    } */
+
+    /* Estilos para a lista de saídas */
+    .list-exit {
+        border: 1px solid var(--golden-color);
+        background-color: var(--input-background-color);
+        padding: .4rem;
+        margin-top: 1rem; /* Espaçamento acima da lista */
+        max-height: 25rem;
+        overflow-y: scroll;
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--golden-color); /* Cor do título da lista */
+        }
+
+        ul {
+            list-style: none; /* Remove marcadores de lista */
+            padding: 0;
+            margin: 0;
+
+
+            & li {
+                border: 1px solid var(--border-color); /* Borda para cada item */
+                background-color: var(--secondary-background-color); /* Fundo para cada item */
+                padding: 0.8rem;
+                margin-bottom: 0.6rem; /* Espaçamento entre os itens da lista */
+                border-radius: .4rem; /* Cantos arredondados */
+                color: var(--text-color-light); /* Cor do texto */
+                font-size: 0.9rem;
+                display: flex;
+                flex-direction: column; /* Para que Valor e Data fiquem em linhas separadas */
+                gap: 0.2rem; /* Espaçamento entre as linhas dentro do item */
+                
+                & .card-header{
+                    display: flex;
+                    & p { /* Estilo para a mensagem "Nenhum registro encontrado" */
+                        text-align: center;
+                        color: var(--text-color);
+                        padding: 1rem;
+
+                        span {
+                            font-weight: bold;
+                            color: var(--golden-color);
+                        }
+                    }
+                }
+
+                & .card-details {
+                    display: flex;
+                    justify-content: space-between; /* Espaça os detalhes */
+                    gap: 0.4rem; /* Espaçamento entre os detalhes */
+
+                    .detail-item{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        align-items: center;
+                        flex: 1; /* Para que os detalhes ocupem o espaço disponível */
+                        padding: 0.2rem;
+                        border: 1px solid var(--golden-color);
+                    }
+                }
+            }
+            & li:last-child {
+                margin-bottom: 0; /* Remove margem do último item */
             }
         }
     }
