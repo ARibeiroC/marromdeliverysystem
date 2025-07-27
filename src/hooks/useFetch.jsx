@@ -28,7 +28,7 @@ export class MyRequest{
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
-        console.log('Enviando dados:', data);
+
         const res = await fetch(uri, {
             method: 'POST',
             headers: headers,

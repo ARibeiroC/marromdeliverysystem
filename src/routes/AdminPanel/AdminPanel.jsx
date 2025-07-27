@@ -39,16 +39,13 @@ export function AdminPanel(){
     const handleFilter = async (e)=>{
         e.preventDefault()
 
-        requestExits(dataStart, dataEnd, true); // Passa true para exibir feedback de sucesso/erro
+        requestExits(dataStart, dataEnd); // Passa true para exibir feedback de sucesso/erro
     }
 
-    async function requestExits(startDate, endDate, showFeedback = false){
+    async function requestExits(startDate, endDate){
         const token = sessionStorage.getItem('access_token')
 
         if (!token) {
-            if (showFeedback) {
-                showFeedbackMessage('Erro: Token de acesso não encontrado. Faça login novamente.', 'error');
-            }
             navigate('/delivery/admin');
             return;
         }
@@ -62,19 +59,12 @@ export function AdminPanel(){
 
             const sumValues = data.reduce((sum, record) => sum + (record.valor_atual || 0), 0);
             setTotalValores(sumValues);
-
-            if (showFeedback) {
-                showFeedbackMessage('Registros carregados com sucesso!', 'success');
-            }
         } catch (error) {
             if (error.status === 401) {
                 sessionStorage.removeItem('access_token');
                 showFeedbackMessage('Sessão expirada ou inválida. Faça login novamente.', 'error');
                 navigate('/delivery/admin');
             } else {
-                if (showFeedback) {
-                    showFeedbackMessage(`Erro ao carregar registros: ${error.message}`, 'error');
-                }
                 console.error('Erro na requisição de registros:', error);
             }
         }
@@ -104,12 +94,7 @@ export function AdminPanel(){
             // Chamada inicial sem exibir feedback para o usuário
             requestExits(period.start, period.end, false)
         }
-        // Limpar o timer se o componente for desmontado
-        return () => {
-            if (messageTimerRef.current) {
-                clearTimeout(messageTimerRef.current);
-            }
-        };
+        
     },[])
 
     return (
@@ -142,14 +127,6 @@ export function AdminPanel(){
                 </div>
                 <Button text={'Aplicar Filtros'} action={handleFilter} />
             </div>
-            {/* Mensagem de feedback condicional */}
-            {isMessageVisible && ( // Renderiza a div apenas se isMessageVisible for true
-                <div id="feedback-message" className={`${messageType} ${isMessageExiting ? 'exiting' : ''}`}>
-                    {console.log(`Mensagem: ${message}, Tipo: ${messageType}, Visível: ${isMessageVisible}`)}
-                    <p>{message}</p>
-                </div>
-            )}
-            {/* {!isMessageExiting && (console.log(`Mensagem: ${message}, Tipo: ${messageType}, Visível: ${isMessageVisible}`))} */}
             <div className="list-exit">
                 <h2>Lista de Saídas</h2>
                 {records.length > 0 ? (

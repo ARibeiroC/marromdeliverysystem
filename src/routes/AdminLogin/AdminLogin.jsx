@@ -50,7 +50,6 @@ export function AdminLogin(){
     const handleSubmit = async (e)=>{
         e.preventDefault(); // Previne o comportamento padrão do formulário (recarregar a página)
         const element = e.target; // O 'e.target' aqui é o formulário
-        console.log('Formulário submetido:', element);
         const user = {
             username: element.username.value, // Acessa o valor do campo 'username' pelo seu atributo 'name'
             password: element.password.value  // Acessa o valor do campo 'password' pelo seu atributo 'name'
