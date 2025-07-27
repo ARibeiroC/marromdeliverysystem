@@ -161,11 +161,11 @@ export function AdminPanel(){
                                 <li key={record._id} className="record-card">
                                     <div className="card-header">
                                         <p className="driver-name">
-                                            <span>Motorista:</span>
+                                            <span>Motorista: </span>
                                             {record.nome_do_motorista}
                                         </p>
                                         <p className="vehicle-plate">
-                                            <span>Veículo:</span>
+                                            <span>Veículo: </span>
                                             {record.placa_do_veiculo}
                                         </p>
                                     </div>
