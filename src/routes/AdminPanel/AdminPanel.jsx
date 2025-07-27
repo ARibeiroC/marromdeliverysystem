@@ -10,7 +10,9 @@ import { useNavigate } from "react-router-dom"
 import { useEffect, useState, useRef } from 'react'
 import { MyRequest } from '../../hooks/useFetch'
 
-const uri = import.meta.env.VITE_API_URL
+// Lógica para determinar a URI da API
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const uri = isLocalhost ? 'http://127.0.0.1:5000/' : import.meta.env.VITE_API_URL; // Use a URL do Render para produção
 
 const data = new Date()
 const dia = data.getDate()

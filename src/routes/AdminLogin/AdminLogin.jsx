@@ -11,71 +11,66 @@ import './style.css'
 import { MyRequest } from "../../hooks/useFetch"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { useAuth } from '../../context/AuthContext'; // Importar useAuth para usar o Context de Autenticação
+import { useAuth } from '../../context/AuthContext';
 
-const uri = 'http://127.0.0.1:5000' || import.meta.env.VITE_API_URL
-console.log('API URL:', uri) // Verifica se a URL da API está correta
+// Lógica para determinar a URI da API
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const uri = isLocalhost ? 'http://127.0.0.1:5000/' : import.meta.env.VITE_API_URL; // Use a URL do Render para produção
+
 const req = new MyRequest()
 
 export function AdminLogin(){
-    // O estado de login agora é gerenciado pelo AuthContext, não mais localmente.
-    // const [isLogged, setIsLogged] = useState(null) // Removido
-    const [errorMessage, setErrorMessage] = useState('') // Estado para mensagens de erro
+    const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
-    const { login, isLoggedIn } = useAuth(); // Obter a função 'login' e o estado 'isLoggedIn' do Context
+    const { login, isLoggedIn } = useAuth();
 
     const token_validate = async (user)=>{
-        setErrorMessage(''); // Limpa mensagens de erro anteriores
+        setErrorMessage('');
         try {
             const data = await req.post(`${uri}api/v1/auth/login`, user)
 
-            // Verifica se a resposta contém o token de acesso
             if (data && data.access_token) {
-                login(data.access_token); // Chama a função 'login' do AuthContext para armazenar o token e atualizar o estado global
-                navigate('/delivery/admin-dashboard'); // Redireciona para o dashboard após login bem-sucedido
+                login(data.access_token);
+                navigate('/delivery/admin-dashboard');
                 return true
             } else {
-                // Se o backend retornou uma mensagem de erro (ex: "Credenciais inválidas")
                 setErrorMessage(data.message || 'Erro desconhecido ao validar token.');
-                // Não é necessário chamar setIsLogged(false) aqui, pois o Context já gerencia isso.
                 return false
             }
         } catch (error) {
             setErrorMessage(error.message || 'Erro na requisição de login.');
-            // Não é necessário chamar setIsLogged(false) aqui, o Context já gerencia isso.
             console.error('Erro na requisição de login:', error);
             return false;
         }
     }
 
     const handleSubmit = async (e)=>{
-        e.preventDefault(); // Previne o comportamento padrão do formulário (recarregar a página)
-        const element = e.target; // O 'e.target' aqui é o formulário
+        e.preventDefault();
+        const element = e.target;
+        console.log('Formulário submetido:', element);
         const user = {
-            username: element.username.value, // Acessa o valor do campo 'username' pelo seu atributo 'name'
-            password: element.password.value  // Acessa o valor do campo 'password' pelo seu atributo 'name'
+            username: element.username.value,
+            password: element.password.value
         }
 
-        await token_validate(user); // Chama a função de validação do token
+        await token_validate(user);
     }
 
-    // Este useEffect agora lida com o redirecionamento se o usuário já estiver logado
-    // ao tentar acessar a página de login diretamente.
     useEffect(() => {
         if (isLoggedIn) {
             navigate('/delivery/admin-dashboard');
         }
-    }, [isLoggedIn, navigate]); // Depende de 'isLoggedIn' (do Context) e 'navigate'
+    }, [isLoggedIn, navigate]);
 
     return (
         <div className="admin-login">
             <Logotipo />
-            <form onSubmit={handleSubmit}> {/* O onSubmit do formulário chama handleSubmit */}
+            <form onSubmit={handleSubmit}>
                 <h1 className="golden-text title">LOGIN</h1>
-                {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Exibe a mensagem de erro, se houver */}
-                <Input type='text' placeholder={'E-mail'} required={true} name='username'/> {/* Campo de entrada para o e-mail */}
-                <Input type='password' placeholder={'Senha'} required={true} name='password'/> {/* Campo de entrada para a senha */}
-                <Button text='Entrar'/> {/* Botão de submissão do formulário (type='submit' por padrão) */}
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                <Input type='text' placeholder={'E-mail'} required={true} name='username'/>
+                <Input type='password' placeholder={'Senha'} required={true} name='password'/>
+                <Button text='Entrar'/>
             </form>
         </div>
     )
