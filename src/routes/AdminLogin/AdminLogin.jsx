@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useAuth } from '../../context/AuthContext'; // Importar useAuth para usar o Context de Autenticação
 
-const uri = import.meta.env.VITE_API_URL
+const uri = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'
+console.log('API URL:', uri) // Verifica se a URL da API está correta
 const req = new MyRequest()
 
 export function AdminLogin(){
