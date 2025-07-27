@@ -7,7 +7,7 @@ import './style.css'
 
 // IMPORT HOOKS
 import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { MyRequest } from '../../hooks/useFetch'
 
 const uri = import.meta.env.VITE_API_URL
@@ -28,8 +28,9 @@ export function AdminPanel(){
     const req = new MyRequest();
     const [records, setRecords] = useState([]);
 
+    const [totalSaidas, setTotalSaidas] = useState(0) // AGORA: Este será o total GERAL de saídas
     const [totalValores, setTotalValores] = useState(0)
-    const [saidasPeriodo, setSaidasPeriodo] = useState(0)
+    const [saidasPeriodo, setSaidasPeriodo] = useState(0) // Continua sendo o total de saídas do período filtrado
 
     const [dataStart, setDataStart] = useState('')
     const [dataEnd, setDataEnd] = useState('')
@@ -38,11 +39,10 @@ export function AdminPanel(){
 
     const handleFilter = async (e)=>{
         e.preventDefault()
-
-        requestExits(dataStart, dataEnd); // Passa true para exibir feedback de sucesso/erro
+        requestExits(dataStart, dataEnd, false); 
     }
 
-    async function requestExits(startDate, endDate){
+    async function requestExits(startDate, endDate, showFeedback = false){
         const token = sessionStorage.getItem('access_token')
 
         if (!token) {
@@ -55,18 +55,37 @@ export function AdminPanel(){
         try {
             const data = await req.getAll(url, token);
             setRecords(data);
-            setSaidasPeriodo(data.length);
+            setSaidasPeriodo(data.length); // Atualiza o total para o período filtrado
 
             const sumValues = data.reduce((sum, record) => sum + (record.valor_atual || 0), 0);
             setTotalValores(sumValues);
+
         } catch (error) {
             if (error.status === 401) {
                 sessionStorage.removeItem('access_token');
-                showFeedbackMessage('Sessão expirada ou inválida. Faça login novamente.', 'error');
                 navigate('/delivery/admin');
             } else {
                 console.error('Erro na requisição de registros:', error);
             }
+        }
+    }
+
+    // FUNÇÃO ATUALIZADA: Para buscar o total geral de saídas usando a nova rota
+    async function requestOverallExits() {
+        const token = sessionStorage.getItem('access_token');
+        if (!token) {
+            setTotalSaidas(0); // Usa setTotalSaidas para o total geral
+            return;
+        }
+
+        const url = `${uri}api/v1/registros_saida/total`;
+
+        try {
+            const data = await req.getAll(url, token);
+            setTotalSaidas(data.total_saidas); // CORRIGIDO: Acessa a propriedade 'total_saidas' e define em totalSaidas
+        } catch (error) {
+            console.error('Erro ao carregar o total geral de registros:', error);
+            setTotalSaidas(0); // Reseta em caso de erro
         }
     }
 
@@ -79,7 +98,6 @@ export function AdminPanel(){
     // Função para logout (apenas no frontend) - Mantida para referência, mas o botão foi removido
     const handleLogout = () => {
         sessionStorage.removeItem('access_token');
-        showFeedbackMessage('Sessão encerrada. Redirecionando para o login...', 'success');
         navigate('/delivery/admin');
     };
 
@@ -91,10 +109,11 @@ export function AdminPanel(){
         } else {
             setDataStart(period.start)
             setDataEnd(period.end)
-            // Chamada inicial sem exibir feedback para o usuário
+            // Chamada inicial para o período atual
             requestExits(period.start, period.end, false)
+            // Chamada para o total geral de saídas na montagem do componente
+            requestOverallExits(); 
         }
-        
     },[])
 
     return (
@@ -103,7 +122,7 @@ export function AdminPanel(){
             <div className="dashboard-summary">
                 <div className="summary-card">
                     <h3>Total de saídas</h3>
-                    <p className="summary-value">{saidasPeriodo}</p>
+                    <p className="summary-value">{totalSaidas}</p> {/* AGORA EXIBE O TOTAL GERAL */}
                 </div>
                 <div className="summary-card">
                     <h3>Soma dos Valores</h3>
@@ -111,7 +130,7 @@ export function AdminPanel(){
                 </div>
                 <div className="summary-card">
                     <h3>Saídas no período</h3>
-                    <p className="summary-value">{saidasPeriodo}</p>
+                    <p className="summary-value">{saidasPeriodo}</p> {/* CONTINUA EXIBINDO O TOTAL DO PERÍODO FILTRADO */}
                 </div>
             </div>
             <div className="filter-section">
@@ -139,8 +158,8 @@ export function AdminPanel(){
                             return (
                                 <li key={record._id} className="record-card">
                                     <div className="card-header">
-                                        <p className="driver-name"><span>Motorista: </span>{record.nome_do_motorista}</p>
-                                        <p className="vehicle-plate"><span>Veículo: </span>{record.placa_do_veiculo}</p>
+                                        <p className="driver-name">{record.nome_do_motorista}</p>
+                                        <p className="vehicle-plate">{record.placa_do_veiculo}</p>
                                     </div>
                                     <div className="card-details">
                                         <div className="detail-item">
@@ -164,7 +183,6 @@ export function AdminPanel(){
                     <p>Nenhum registro de saída encontrado para o período.</p>
                 )}
             </div>
-            {/* REMOVIDO: Seção do botão de logout */}
         </div>
     )
 }
