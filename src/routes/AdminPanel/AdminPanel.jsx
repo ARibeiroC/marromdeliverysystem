@@ -160,8 +160,14 @@ export function AdminPanel(){
                             return (
                                 <li key={record._id} className="record-card">
                                     <div className="card-header">
-                                        <p className="driver-name">{record.nome_do_motorista}</p>
-                                        <p className="vehicle-plate">{record.placa_do_veiculo}</p>
+                                        <p className="driver-name">
+                                            <span>Motorista:</span>
+                                            {record.nome_do_motorista}
+                                        </p>
+                                        <p className="vehicle-plate">
+                                            <span>Veículo:</span>
+                                            {record.placa_do_veiculo}
+                                        </p>
                                     </div>
                                     <div className="card-details">
                                         <div className="detail-item">
