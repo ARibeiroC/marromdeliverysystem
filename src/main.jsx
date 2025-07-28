@@ -11,9 +11,10 @@ import {RegisterExit} from './routes/RegisterExit/RegisterExit.jsx'
 import { AdminLogin } from './routes/AdminLogin/AdminLogin.jsx'
 import { Welcome } from './routes/Welcome/Welcome.jsx'
 import { AdminPanel } from './routes/AdminPanel/AdminPanel.jsx'
+import { UsageMetrics } from './routes/UsageMetrics/UsageMetrics.jsx';
 
 // IMPORT AUTH CONTEXT
-import { AuthProvider } from './context/AuthContext.jsx'; // CORRIGIDO: Importar AuthProvider
+import { AuthProvider } from './context/AuthContext.jsx';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: '/delivery/admin-dashboard',
             element: <AdminPanel />
+          },
+          {
+            path: '/delivery/admin-metrics-general',
+            element: <UsageMetrics />
           }
         ]
       },

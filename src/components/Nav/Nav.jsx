@@ -1,23 +1,45 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from '../../context/AuthContext'; // Importar useAuth para usar o Context de Autenticação
+import { useAuth } from '../../context/AuthContext';
+import { useState, useEffect } from 'react';
 
 // IMPORT STYLE CSS
 import './style.css'
 
 // IMPORT REACT-ICONS
 import { TbLogin2, TbTruckDelivery, TbHome} from "react-icons/tb"
-import { RiAdminLine } from "react-icons/ri";
+import { RiAdminLine, RiBarChartFill } from "react-icons/ri";
 
 export function Nav(){  
-    // Obtém o estado de login e a função de logout do AuthContext
     const { isLoggedIn, logout } = useAuth(); 
-    const navigate = useNavigate(); // Manter useNavigate aqui, pois Nav está dentro do Router
+    const navigate = useNavigate();
+    const [isSuperadmin, setIsSuperadmin] = useState(false);
 
-    // Função para lidar com o clique no botão de logout
     const handleLogoutClick = (e) => {
-        logout(); // Chama a função logout do Context (limpa o token e atualiza isLoggedIn)
-        navigate('/delivery/admin'); // Redireciona para a página de login após o logout
+        logout();
+        navigate('/delivery/admin');
     };
+
+    useEffect(() => {
+        const checkUserRole = async () => {
+            if (isLoggedIn) {
+                const token = sessionStorage.getItem('access_token');
+                if (token) {
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        setIsSuperadmin(payload.role === 'superadmin');
+
+                    } catch (error) {
+                        console.error("Erro ao decodificar token ou verificar papel:", error);
+                        setIsSuperadmin(false);
+                    }
+                }
+            } else {
+                setIsSuperadmin(false);
+            }
+        };
+
+        checkUserRole();
+    }, [isLoggedIn]);
 
     return (
         <nav className="nav">
@@ -31,7 +53,15 @@ export function Nav(){
                 <li>
                     <Link to={'/delivery/register-exit'}><TbTruckDelivery /></Link>
                 </li>
-                {/* Exibição condicional do botão de Logout baseada no estado 'isLoggedIn' do Context */}
+                {/* Link para Métricas Gerais, visível apenas para superadministradores */}
+                {isLoggedIn && isSuperadmin && (
+                    <li>
+                        <Link to={'/delivery/admin-metrics-general'}>
+                            <RiBarChartFill />
+                        </Link>
+                    </li>
+                )}
+                {/* Exibição condicional do botão de Logout */}
                 {isLoggedIn ? (
                     <li>
                         <Link onClick={handleLogoutClick} className="nav-button-logout" to="#">
