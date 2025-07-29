@@ -45,7 +45,7 @@ export function AdminPanel(){
     }
 
     async function requestExits(startDate, endDate, showFeedback = false){
-        const token = sessionStorage.getItem('access_token')
+        const token = localStorage.getItem('access_token')
 
         if (!token) {
             navigate('/delivery/admin');
@@ -64,7 +64,7 @@ export function AdminPanel(){
 
         } catch (error) {
             if (error.status === 401) {
-                sessionStorage.removeItem('access_token');
+                localStorage.removeItem('access_token');
                 navigate('/delivery/admin');
             } else {
                 console.error('Erro na requisição de registros:', error);
@@ -74,7 +74,7 @@ export function AdminPanel(){
 
     // FUNÇÃO ATUALIZADA: Para buscar o total geral de saídas usando a nova rota
     async function requestOverallExits() {
-        const token = sessionStorage.getItem('access_token');
+        const token = localStorage.getItem('access_token');
         if (!token) {
             setTotalSaidas(0); // Usa setTotalSaidas para o total geral
             return;
@@ -99,14 +99,14 @@ export function AdminPanel(){
 
     // Função para logout (apenas no frontend) - Mantida para referência, mas o botão foi removido
     const handleLogout = () => {
-        sessionStorage.removeItem('access_token');
+        localStorage.removeItem('access_token');
         navigate('/delivery/admin');
     };
 
     useEffect(()=>{
         const period = getInitialPeriodDates()
 
-        if(sessionStorage.getItem('access_token') === null){
+        if(localStorage.getItem('access_token') === null){
             navigate('/delivery/admin')
         } else {
             setDataStart(period.start)
