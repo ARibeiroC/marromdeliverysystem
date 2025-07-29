@@ -8,7 +8,7 @@ export function Header(){
     return (
         <header className="header">
             <Nav />
-            {/* {window.location.href.match('home') ? '' : <Logo />} */}
+            {window.location.href.match('home') ? '' : <Logo />}
         </header>
     )
 }

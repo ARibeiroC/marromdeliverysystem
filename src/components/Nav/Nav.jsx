@@ -22,7 +22,7 @@ export function Nav(){
     useEffect(() => {
         const checkUserRole = async () => {
             if (isLoggedIn) {
-                const token = sessionStorage.getItem('access_token');
+                const token = localStorage.getItem('access_token');
                 if (token) {
                     try {
                         const payload = JSON.parse(atob(token.split('.')[1]));

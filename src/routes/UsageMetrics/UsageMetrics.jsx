@@ -22,7 +22,7 @@ export function UsageMetrics() {
             setLoading(true);
             setError('');
 
-            const token = sessionStorage.getItem('access_token');
+            const token = localStorage.getItem('access_token');
 
             if (!token) {
                 navigate('/delivery/admin');
@@ -36,7 +36,7 @@ export function UsageMetrics() {
             } catch (err) {
                 console.error('Erro ao buscar métricas de uso:', err);
                 if (err.status === 401 || err.status === 403) {
-                    sessionStorage.removeItem('access_token');
+                    localStorage.removeItem('access_token');
                     navigate('/delivery/admin');
                     setError('Acesso não autorizado ou sessão expirada. Faça login como superadministrador.');
                 } else {
