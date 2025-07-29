@@ -7,8 +7,7 @@ import './style.css'
 export function Header(){
     return (
         <header className="header">
-            <Nav />
-            {window.location.href.match('home') ? '' : <Logo />}
+            <Nav id='menu' />
         </header>
     )
 }

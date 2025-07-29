@@ -4,6 +4,7 @@ import './style.css'
 // IMPORT IMAGE
 import logo from '../../assets/marrom_film_logo_white.png'
 
+console.log('logo', logo)   
 export function Logotipo(){
     return (
         <div className="logo">
