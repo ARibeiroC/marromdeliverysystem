@@ -2,13 +2,13 @@
 import { Logotipo } from "../../components/Logo/Logo"
 import { Button } from "../../components/Button/Button"
 import { Input } from "../../components/Input/Input"
-
+import { LoadingModal } from "../../components/LoadingModal/LoadingModal"; // NOVO: Importar LoadingModal
 
 // IMPORT STYLE CSS
 import './style.css'
 
 // IMPORT HOOKS
-import { MyRequest } from "../../hooks/useFetch"
+import { MyRequest, useLoading } from "../../hooks/useFetch" // NOVO: Importar useLoading
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useAuth } from '../../context/AuthContext';
@@ -23,6 +23,7 @@ export function AdminLogin(){
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
     const { login, isLoggedIn } = useAuth();
+    const isLoading = useLoading(); // NOVO: Usar o hook useLoading
 
     const token_validate = async (user)=>{
         setErrorMessage('');
@@ -47,7 +48,7 @@ export function AdminLogin(){
     const handleSubmit = async (e)=>{
         e.preventDefault();
         const element = e.target;
-        console.log('Formulário submetido:', element);
+
         const user = {
             username: element.username.value,
             password: element.password.value
@@ -72,6 +73,7 @@ export function AdminLogin(){
                 <Input type='password' placeholder={'Senha'} required={true} name='password'/>
                 <Button text='Entrar'/>
             </form>
+            <LoadingModal show={isLoading} /> {/* NOVO: Renderiza o modal baseado no estado de carregamento */}
         </div>
     )
 }

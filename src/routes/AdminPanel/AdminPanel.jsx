@@ -1,6 +1,7 @@
 // IMPORT COMPONENTS
 import {Input} from '../../components/Input/Input'
 import { Button } from '../../components/Button/Button'
+import { LoadingModal } from "../../components/LoadingModal/LoadingModal"; // NOVO: Importar LoadingModal
 
 // IMPORT STYLE CSS
 import './style.css'
@@ -8,7 +9,7 @@ import './style.css'
 // IMPORT HOOKS
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState, useRef } from 'react'
-import { MyRequest } from '../../hooks/useFetch'
+import { MyRequest, useLoading } from '../../hooks/useFetch' // NOVO: Importar useLoading
 
 // Lógica para determinar a URI da API
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -30,14 +31,15 @@ export function AdminPanel(){
     const req = new MyRequest();
     const [records, setRecords] = useState([]);
 
-    const [totalSaidas, setTotalSaidas] = useState(0) // AGORA: Este será o total GERAL de saídas
+    const [totalSaidas, setTotalSaidas] = useState(0)
     const [totalValores, setTotalValores] = useState(0)
-    const [saidasPeriodo, setSaidasPeriodo] = useState(0) // Continua sendo o total de saídas do período filtrado
+    const [saidasPeriodo, setSaidasPeriodo] = useState(0)
 
     const [dataStart, setDataStart] = useState('')
     const [dataEnd, setDataEnd] = useState('')
 
     const navigate = useNavigate()
+    const isLoading = useLoading(); // NOVO: Usar o hook useLoading
 
     const handleFilter = async (e)=>{
         e.preventDefault()
@@ -57,7 +59,7 @@ export function AdminPanel(){
         try {
             const data = await req.getAll(url, token);
             setRecords(data);
-            setSaidasPeriodo(data.length); // Atualiza o total para o período filtrado
+            setSaidasPeriodo(data.length);
 
             const sumValues = data.reduce((sum, record) => sum + (record.valor_atual || 0), 0);
             setTotalValores(sumValues);
@@ -72,11 +74,10 @@ export function AdminPanel(){
         }
     }
 
-    // FUNÇÃO ATUALIZADA: Para buscar o total geral de saídas usando a nova rota
     async function requestOverallExits() {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            setTotalSaidas(0); // Usa setTotalSaidas para o total geral
+            setTotalSaidas(0);
             return;
         }
 
@@ -84,10 +85,10 @@ export function AdminPanel(){
 
         try {
             const data = await req.getAll(url, token);
-            setTotalSaidas(data.total_saidas); // CORRIGIDO: Acessa a propriedade 'total_saidas' e define em totalSaidas
+            setTotalSaidas(data.total_saidas);
         } catch (error) {
             console.error('Erro ao carregar o total geral de registros:', error);
-            setTotalSaidas(0); // Reseta em caso de erro
+            setTotalSaidas(0);
         }
     }
 
@@ -97,7 +98,6 @@ export function AdminPanel(){
         return {start, end}
     }
 
-    // Função para logout (apenas no frontend) - Mantida para referência, mas o botão foi removido
     const handleLogout = () => {
         localStorage.removeItem('access_token');
         navigate('/delivery/admin');
@@ -111,9 +111,7 @@ export function AdminPanel(){
         } else {
             setDataStart(period.start)
             setDataEnd(period.end)
-            // Chamada inicial para o período atual
             requestExits(period.start, period.end, false)
-            // Chamada para o total geral de saídas na montagem do componente
             requestOverallExits(); 
         }
     },[])
@@ -124,7 +122,7 @@ export function AdminPanel(){
             <div className="dashboard-summary">
                 <div className="summary-card">
                     <h3>Total de saídas</h3>
-                    <p className="summary-value">{totalSaidas}</p> {/* AGORA EXIBE O TOTAL GERAL */}
+                    <p className="summary-value">{totalSaidas}</p>
                 </div>
                 <div className="summary-card">
                     <h3>Soma dos Valores</h3>
@@ -132,7 +130,7 @@ export function AdminPanel(){
                 </div>
                 <div className="summary-card">
                     <h3>Saídas no período</h3>
-                    <p className="summary-value">{saidasPeriodo}</p> {/* CONTINUA EXIBINDO O TOTAL DO PERÍODO FILTRADO */}
+                    <p className="summary-value">{saidasPeriodo}</p>
                 </div>
             </div>
             <div className="filter-section">
@@ -160,14 +158,8 @@ export function AdminPanel(){
                             return (
                                 <li key={record._id} className="record-card">
                                     <div className="card-header">
-                                        <p className="driver-name">
-                                            <span>Motorista: </span>
-                                            {record.nome_do_motorista}
-                                        </p>
-                                        <p className="vehicle-plate">
-                                            <span>Veículo: </span>
-                                            {record.placa_do_veiculo}
-                                        </p>
+                                        <p className="driver-name">{record.nome_do_motorista}</p>
+                                        <p className="vehicle-plate">{record.placa_do_veiculo}</p>
                                     </div>
                                     <div className="card-details">
                                         <div className="detail-item">
@@ -191,6 +183,7 @@ export function AdminPanel(){
                     <p>Nenhum registro de saída encontrado para o período.</p>
                 )}
             </div>
+            <LoadingModal show={isLoading} /> {/* NOVO: Renderiza o modal baseado no estado de carregamento */}
         </div>
     )
 }

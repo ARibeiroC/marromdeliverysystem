@@ -1,27 +1,52 @@
-export class MyRequest{
+import { useState, useEffect } from 'react'; // Importar useEffect também
 
-    async getAll(uri, token){
+export class MyRequest {
+    static loadingCallbacks = [];
+
+    static registerLoadingCallback(callback) {
+        MyRequest.loadingCallbacks.push(callback);
+        return () => {
+            MyRequest.loadingCallbacks = MyRequest.loadingCallbacks.filter(cb => cb !== callback);
+        };
+    }
+
+    static setLoading(isLoading) {
+        MyRequest.loadingCallbacks.forEach(callback => callback(isLoading));
+    }
+
+    async getAll(uri, token) {
+        MyRequest.setLoading(true); // Inicia o carregamento
+        // NOVO: Atraso artificial para teste - REMOVA EM PRODUÇÃO!
+        await new Promise(resolve => setTimeout(resolve, 500)); // Atraso de 500ms
+
         const headers = {};
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const res = await fetch(uri, {
-            method: 'GET',
-            headers: headers
-        });
+        try {
+            const res = await fetch(uri, {
+                method: 'GET',
+                headers: headers
+            });
 
-        if (!res.ok) {
-            const errorData = await res.json();
-            // Lança um objeto de erro com status e mensagem
-            throw { status: res.status, message: errorData.message || `Erro na requisição GET: ${res.status}` };
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw { status: res.status, message: errorData.message || `Erro na requisição GET: ${res.status}` };
+            }
+
+            const json = await res.json();
+            return json;
+        } finally {
+            MyRequest.setLoading(false); // Finaliza o carregamento (sucesso ou erro)
         }
-
-        const json = await res.json();
-        return json;
     }
 
-    async post(uri, data, token = null){
+    async post(uri, data, token = null) {
+        MyRequest.setLoading(true); // Inicia o carregamento
+        // NOVO: Atraso artificial para teste - REMOVA EM PRODUÇÃO!
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Atraso de 500ms
+
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -29,19 +54,33 @@ export class MyRequest{
             headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const res = await fetch(uri, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data)
-        });
+        try {
+            const res = await fetch(uri, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            });
 
-        if (!res.ok) {
-            const errorData = await res.json();
-            // Lança um objeto de erro com status e mensagem
-            throw { status: res.status, message: errorData.message || `Erro na requisição POST: ${res.status}` };
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw { status: res.status, message: errorData.message || `Erro na requisição POST: ${res.status}` };
+            }
+
+            const json = await res.json();
+            return json;
+        } finally {
+            MyRequest.setLoading(false); // Finaliza o carregamento (sucesso ou erro)
         }
-
-        const json = await res.json();
-        return json;
     }
 }
+
+export const useLoading = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const cleanup = MyRequest.registerLoadingCallback(setIsLoading);
+        return cleanup;
+    }, []);
+
+    return isLoading;
+};

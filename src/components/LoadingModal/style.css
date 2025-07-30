@@ -1,0 +1,52 @@
+/*
+ATENÇÃO: Este arquivo CSS utiliza sintaxe de aninhamento (nested CSS),
+que NÃO é suportada nativamente por navegadores em CSS puro.
+Para que este código funcione, você precisará compilá-lo usando um pré-processador CSS como Sass/SCSS
+(ex: com 'node-sass' ou 'sass' e uma configuração de build, como no Vite/Webpack).
+*/
+
+/* Overlay do modal de carregamento */
+.loading-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Garante que o modal fique acima de tudo */
+    backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+
+    /* Conteúdo do modal */
+    .loading-modal-content {
+        background-color: var(--secondary-background-color); /* Cor de fundo do card do modal */
+        padding: 2rem;
+        border-radius: 1rem; /* Cantos arredondados */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra mais forte */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        color: var(--text-color-light);
+        font-size: 1.2rem;
+        font-weight: bold;
+
+        /* Spinner de carregamento */
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3); /* Borda cinza clara */
+            border-top: 8px solid var(--golden-color); /* Borda superior dourada */
+            border-radius: 50%; /* Torna-o um círculo */
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite; /* Animação de rotação */
+        }
+    }
+}
+
+/* Animação do spinner */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

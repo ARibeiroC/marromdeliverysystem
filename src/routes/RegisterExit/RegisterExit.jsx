@@ -1,7 +1,8 @@
 // IMPORT COMPONENTS
-import { Logotipo } from '../../components/Logo/Logo'
+import { Logotipo }from '../../components/Logo/Logo'
 import { Input } from '../../components/Input/Input'
 import { Button } from '../../components/Button/Button'
+import { LoadingModal } from "../../components/LoadingModal/LoadingModal";
 
 
 // IMPORT STYLE CSS
@@ -10,29 +11,27 @@ import './style.css'
 
 // IMPORT HOOKS
 import { useState } from 'react'
-import { MyRequest } from '../../hooks/useFetch'
+import { MyRequest, useLoading } from '../../hooks/useFetch'
 
-// Lógica para determinar a URI da API (mantida)
+// Lógica para determinar a URI da API
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const uri = isLocalhost ? 'http://127.0.0.1:5000/' : import.meta.env.VITE_API_URL; // Use a URL do Render para produção
+const uri = isLocalhost ? 'http://127.0.0.1:5000/' : import.meta.env.VITE_API_URL;
 
 const req = new MyRequest()
 
 export function RegisterExit(){
-    // Estados baseados na sua versão fornecida, mas com nomes mais descritivos para o backend
-    const [nomeDoMotorista, setNomeDoMotorista] = useState(''); // Usando nomeDoMotorista
-    const [placaDoVeiculo, setPlacaDoVeiculo] = useState(''); // Usando placaDoVeiculo
-    const [timestampSaida, setTimestampSaida] = useState(''); // Estado para data/hora de saída (mantido)
-    const [message, setMessage] = useState(''); // Estado para mensagens de feedback (mantido)
+    const [nomeDoMotorista, setNomeDoMotorista] = useState('');
+    const [placaDoVeiculo, setPlacaDoVeiculo] = useState('');
+    const [message, setMessage] = useState('');
+    const isLoading = useLoading();
 
     const handleSubmit = async (e)=>{
         e.preventDefault();
-        setMessage(''); // Limpa mensagens anteriores
+        setMessage('');
 
         const forData = {
-            'nome_do_motorista': nomeDoMotorista, // Usando nomeDoMotorista
-            'placa_do_veiculo': placaDoVeiculo, // Usando placaDoVeiculo
-            'timestamp_saida': timestampSaida || undefined // Se vazio, o backend usará datetime.now()
+            'nome_do_motorista': nomeDoMotorista,
+            'placa_do_veiculo': placaDoVeiculo,
         };
 
         console.log('Enviando dados para registro de saída:', forData);
@@ -44,10 +43,8 @@ export function RegisterExit(){
                 setMessage(`Erro: ${response.error}`);
             } else if (response && response.message) {
                 setMessage(`Sucesso: ${response.message}`);
-                // Limpa os campos do formulário após o sucesso
                 setNomeDoMotorista('');
                 setPlacaDoVeiculo('');
-                setTimestampSaida('');
             } else {
                 setMessage('Resposta inesperada do servidor.');
             }
@@ -66,33 +63,26 @@ export function RegisterExit(){
                 <Input
                     type='text'
                     placeholder={'Nome completo do motorista'}
-                    minLength={20} // Corrigido para minLength
-                    maxLength={80} // Corrigido para maxLength
+                    minLength={20}
+                    maxLength={80}
                     required={true}
-                    name='driver-name'
-                    value={nomeDoMotorista} // Vinculado ao estado nomeDoMotorista
-                    onChange={(e)=> setNomeDoMotorista(e.target.value)} // Atualiza nomeDoMotorista
+                    name='nome-motorista'
+                    value={nomeDoMotorista}
+                    onChange={(e)=> setNomeDoMotorista(e.target.value)}
                 />
                 <Input
                     type='text'
                     placeholder={'Placa do Veículo'}
-                    maxLength={9} // Corrigido para maxLength
-                    required={true} // Adicionado required para consistência
-                    name='vehicle-plate'
-                    value={placaDoVeiculo} // Vinculado ao estado placaDoVeiculo
-                    onChange={(e)=> setPlacaDoVeiculo(e.target.value)} // Atualiza placaDoVeiculo
+                    maxLength={9}
+                    required={true}
+                    name='placa-veiculo'
+                    value={placaDoVeiculo}
+                    onChange={(e)=> setPlacaDoVeiculo(e.target.value)}
                 />
-                {/* Input para Data e Hora de Saída (mantido) */}
-                <Input
-                    type='datetime-local'
-                    placeholder={'Data e Hora da Saída (Opcional)'}
-                    name='timestamp-saida'
-                    value={timestampSaida}
-                    onChange={(e)=> setTimestampSaida(e.target.value)}
-                />
-                <Button text='Registrar' /> {/* 'required' removido, não é uma prop padrão para Button */}
+                <Button text='Registrar' />
             </form>
-            {message && <p className="message">{message}</p>} {/* Exibe a mensagem de feedback (mantido) */}
+            {message && <p className="message">{message}</p>}
+            <LoadingModal show={isLoading} />
         </div>
     )
 }
