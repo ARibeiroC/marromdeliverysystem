@@ -39,3 +39,39 @@ src/
       └── FilterBar/
            ├── FilterBar.jsx
            └── FilterBar.css
+```
+## 💻 Como Executar o Projeto Localmente
+Por ser um projeto com TypeScript, você precisará apenas compilar os arquivos de script (ou rodar em modo watch) se decidir fazer alterações no código fonte.
+
+Pré-requisitos
+Antes de começar, certifique-se de ter o Node.js e o TypeScript instalados globalmente ou as dependências do projeto inicializadas.
+
+1. Clone o repositório:
+```
+git clone [https://github.com/seu-usuario/marrom-delivery-system.git](https://github.com/seu-usuario/marrom-delivery-system.git)
+```
+
+2. Acesse a pasta do projeto:
+```
+cd marrom-delivery-system
+```
+
+3. Instale as dependências:
+```
+npm install
+# ou se usar yarn
+yarn
+```
+
+4. Inicie o servidor de desenvolvimento:
+```
+npm run dev
+# ou se usar yarn
+yarn dev
+```
+
+## 📄 Licença
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+
+Desenvolvido por Seu Nome 🚀
+
